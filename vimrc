@@ -24,8 +24,8 @@
 "==========================================
 
 " 修改leader键
-let mapleader = ','
-let g:mapleader = ','
+let mapleader = ';'
+let g:mapleader = ';'
 
 " 开启语法高亮
 syntax on
@@ -58,9 +58,9 @@ filetype plugin on
 filetype plugin indent on
 
 " 文件修改之后自动载入
-set autoread
+" set autoread
 " 启动的时候不显示那个援助乌干达儿童的提示
-set shortmess=atI
+" set shortmess=atI
 
 " 备份,到另一个位置. 防止误删, 目前是取消备份
 "set backup
@@ -89,18 +89,20 @@ set noswapfile
 set wildignore=*.swp,*.bak,*.pyc,*.class,.svn
 
 " 突出显示当前列
-set cursorcolumn
+" set cursorcolumn
+" 第100列高亮
+set colorcolumn=100
 " 突出显示当前行
 set cursorline
 
 
 " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉
 " 好处：误删什么的，如果以前屏幕打开，可以找回
-set t_ti= t_te=
+" set t_ti= t_te=
 
 
 " 鼠标暂不启用, 键盘党....
-set mouse-=a
+" set mouse-=a
 " 启用鼠标
 " set mouse=a
 " Hide the mouse cursor while typing
@@ -108,16 +110,16 @@ set mouse-=a
 
 
 " 修复ctrl+m 多光标操作选择的bug，但是改变了ctrl+v进行字符选中时将包含光标下的字符
-set selection=inclusive
-set selectmode=mouse,key
+" set selection=inclusive
+" set selectmode=mouse,key
 
 " change the terminal's title
-set title
+" set title
 " 去掉输入错误的提示声音
-set novisualbell
-set noerrorbells
-set t_vb=
-set tm=500
+" set novisualbell
+" set noerrorbells
+" set t_vb=
+" set tm=500
 
 " Remember info about open buffers on close
 set viminfo^=%
@@ -312,9 +314,9 @@ inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDow
 inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
 
 " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-endif
+" if has("autocmd")
+"   au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+" endif
 
 "==========================================
 " HotKey Settings  自定义快捷键设置
@@ -411,7 +413,7 @@ noremap L $
 
 
 " Map ; to : and save a million keystrokes 用于快速进入命令行
-nnoremap ; :
+" nnoremap ; :
 
 
 " 命令行模式增强，ctrl - a到行首， -e 到行尾
@@ -423,7 +425,7 @@ cnoremap <C-e> <End>
 
 " 搜索相关
 " Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
-map <space> /
+" map <space> /
 " 进入搜索Use sane regexes"
 nnoremap / /\v
 vnoremap / /\v
@@ -540,9 +542,20 @@ nnoremap <C-y> 2<C-y>
 
 " Quickly close the current window
 nnoremap <leader>q :q<CR>
+nnoremap <leader>Q :q!<CR>
 
 " Quickly save the current file
 nnoremap <leader>w :w<CR>
+nnoremap <leader>W :wq<CR>
+
+" 快速分屏打开文件
+nnoremap <leader>s :vsplit<Space>
+
+" tagbar设置
+let tagbar_left=1
+let tagbar_width=32
+let NERDTreeWinPos="right"
+nmap <F10> :NERDTreeToggle<CR>
 
 " 交换 ' `, 使得可以快速使用'跳到marked位置
 nnoremap ' `
@@ -590,7 +603,9 @@ function! AutoSetFileHead()
     "如果文件类型为python
     if &filetype == 'python'
         call setline(1, "\#!/usr/bin/env python")
-        call append(1, "\# encoding: utf-8")
+        call append(1, "\# -*- encoding: utf-8 -*-")
+        call append(2, "")
+        call append(3, ["\"\"\"", "Enter docstring here.", "\"\"\""])
     endif
 
     normal G
@@ -598,6 +613,22 @@ function! AutoSetFileHead()
     normal o
 endfunc
 
+" 定义函数注释模板，连按'n'f'键自动添加
+function! AddNewFunction()
+    let func_comment = [
+        \"def function_name(input):",
+        \"    \"\"\"",
+        \"    Enter docstring here.",
+        \"",
+        \"    :param input: ",
+        \"    :type input: ",
+        \"    :returns: ",
+        \"    :type returns: ",
+        \"    \"\"\""]
+    call append(line("."), func_comment)
+endfunc
+" new function
+map nf :call AddNewFunction()<CR>
 
 " 设置可以高亮的关键字
 if has("autocmd")
@@ -663,8 +694,8 @@ endif
 set background=dark
 set t_Co=256
 
-colorscheme solarized
-" colorscheme molokai
+" colorscheme solarized
+colorscheme molokai
 " colorscheme desert
 
 
